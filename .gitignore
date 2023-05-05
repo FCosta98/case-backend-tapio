@@ -1,0 +1,7 @@
+django_env
+django_env/*
+
+db.sqlite3
+
+projection/__pycache__
+api/__pycache__

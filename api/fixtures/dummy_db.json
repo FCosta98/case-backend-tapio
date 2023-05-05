@@ -1,0 +1,86 @@
+[
+    {
+        "model": "api.report",
+        "pk": 100,
+        "fields": {
+            "name": "Report 1",
+            "date": "2022-01-01"
+        }
+    },
+    {
+        "model": "api.source",
+        "pk": 100,
+        "fields": {
+            "report": 100,
+            "description": "Voiture",
+            "value": 1,
+            "emission_factor": 8.98,
+            "total_emission": 10000,
+            "lifetime": 5,
+            "acquisition_year": 2020
+        }
+    },
+    {
+        "model": "api.modification",
+        "pk": 100,
+        "fields": {
+            "source": 100,
+            "description": "Voiture electrique",
+            "value": 1,
+            "total_emission": 1500,
+            "emission_factor": 2.05,
+            "lifetime": 5,
+            "acquisition_year": 2022
+        }
+    },
+    {
+        "model": "api.source",
+        "pk": 101,
+        "fields": {
+            "report": 100,
+            "description": "Machine à café",
+            "value": 1,
+            "emission_factor": 3.76,
+            "total_emission": 300,
+            "lifetime": 6,
+            "acquisition_year": 2023
+        }
+    },
+    {
+        "model": "api.modification",
+        "pk": 101,
+        "fields": {
+            "source": 101,
+            "ratio": 0.75,
+            "description": "Modif café 1",
+            "total_emission": 30,
+            "lifetime": 1,
+            "acquisition_year": 2024
+        }
+    },
+    {
+        "model": "api.modification",
+        "pk": 102,
+        "fields": {
+            "source": 101,
+            "ratio": 2,
+            "description": "Modif café 2",
+            "total_emission": 15,
+            "lifetime": 1,
+            "acquisition_year": 2025
+        }
+    },
+    {
+        "model": "api.source",
+        "pk": 102,
+        "fields": {
+            "report": 100,
+            "description": "Source 3",
+            "value": 5,
+            "emission_factor": 2.86,
+            "total_emission": 300,
+            "lifetime": 3,
+            "acquisition_year": 2026
+        }
+    }
+]

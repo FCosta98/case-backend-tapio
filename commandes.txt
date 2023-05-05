@@ -1,0 +1,11 @@
+super user: costa Costa1998
+
+activer env :   source ./django_env/bin/activate
+
+DB :            python3 manage.py makemigrations
+                python3 manage.py migrate
+
+run:            python3 manage.py runserver
+
+populate dummy db: python3 manage.py loaddata dummy_db.json
+
