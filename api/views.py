@@ -45,9 +45,9 @@ class ReportDetail(APIView):
         print("TOTAL Report:", total_emission)
         print("DELTA Report:", delta)
 
+        list_of_emission = {year: total_emission}
         if year is not None:
             to = int(request.query_params.get('to')) if request.query_params.get('to') != None else None
-            list_of_emission = {year: total_emission}
             if to is not None and to > year:
                 for i in range(year+1, to+1):
                     list_of_emission[i] = instance.get_total_emissions(i, sources)
@@ -126,9 +126,9 @@ class SourceDetail(APIView):
         print("TOTAL :", total_emission)
         print("Delta :", delta)
 
+        list_of_emission = {year: total_emission}
         if year is not None:
             to = int(request.query_params.get('to')) if request.query_params.get('to') != None else None
-            list_of_emission = {year: total_emission}
             if to is not None and to > year:
                 for i in range(year+1, to+1):
                     list_of_emission[i] = source_instance.get_total_emissions(i, modif_list)
