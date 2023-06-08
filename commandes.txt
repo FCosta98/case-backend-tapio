@@ -7,5 +7,7 @@ DB :            python3 manage.py makemigrations
 
 run:            python3 manage.py runserver
 
-populate dummy db: python3 manage.py loaddata dummy_db.json
+populate db:    python3 manage.py loaddata dummy_db.json
+
+tests:          python3 manage.py test api
 

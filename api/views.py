@@ -39,23 +39,20 @@ class ReportDetail(APIView):
 
         sources = Source.objects.filter(report=report_id)
         
-        year = int(request.query_params.get('year')) if request.query_params.get('year') != None else None
+        year = int(request.query_params.get('year')) if request.query_params.get('year') is not None else None
         total_emission = instance.get_total_emissions(year, sources)
         delta = instance.get_delta(year, sources)
-        print("TOTAL Report:", total_emission)
-        print("DELTA Report:", delta)
 
         list_of_emission = {year: total_emission}
         if year is not None:
-            to = int(request.query_params.get('to')) if request.query_params.get('to') != None else None
+            to = int(request.query_params.get('to')) if request.query_params.get('to') is not None else None
             if to is not None and to > year:
                 for i in range(year+1, to+1):
                     list_of_emission[i] = instance.get_total_emissions(i, sources)
-                
-                print("Data dict : ", list_of_emission)
 
         serializer = ReportSerializer(instance)
         sources_serializer = SourceSerializer(sources, many=True)
+
         return Response(
             {
                 "Report ": serializer.data, 
@@ -83,10 +80,11 @@ class SourceList(APIView):
         '''
             List all the Source items
         '''
-        sources = Source.objects.all()
         report = request.query_params.get('report')
         if report is not None:
-            sources = sources.filter(report=report)
+            sources = Source.objects.filter(report=report)
+        else:
+            sources = Source.objects.all()
         serializer = SourceSerializer(sources, many=True)
         return Response({"Sources ":serializer.data}, status=status.HTTP_200_OK)
     
@@ -114,26 +112,23 @@ class SourceDetail(APIView):
 
     def get(self, request, source_id, *args, **kwargs):
 
-        modif_list = Modification.objects.filter(source=source_id)
-
         source_instance = Source.objects.filter(id=source_id).first()
         if source_instance is None:
             return Response({"Source doesn't exist"})
+        
+        modif_list = Modification.objects.filter(source=source_id).order_by("acquisition_year")
 
-        year = int(request.query_params.get('year')) if request.query_params.get('year') != None else None
+        year = int(request.query_params.get('year')) if request.query_params.get('year') is not None else None
         total_emission = source_instance.get_total_emissions(year, modif_list)
         delta = source_instance.get_delta(year, modif_list)
-        print("TOTAL :", total_emission)
-        print("Delta :", delta)
 
-        list_of_emission = {year: total_emission}
+        year2 = year if year is not None else "total"
+        list_of_emission = {year2: total_emission}
         if year is not None:
-            to = int(request.query_params.get('to')) if request.query_params.get('to') != None else None
+            to = int(request.query_params.get('to')) if request.query_params.get('to') is not None else None
             if to is not None and to > year:
                 for i in range(year+1, to+1):
                     list_of_emission[i] = source_instance.get_total_emissions(i, modif_list)
-                
-                print("Data dict : ", list_of_emission)
 
 
         source_serializer = SourceSerializer(source_instance)
@@ -153,23 +148,31 @@ class SourceDetail(APIView):
     def post(self, request, source_id, *args, **kwargs):
         '''
             Create a Modification with given data
+            {
+                "description": "test date",
+                "ratio": 2.0,
+                "emission_factor": 1.234,
+                "total_emission": 15.0,
+                "acquisition_year": "2023-09-22",
+                "lifetime": 1,
+                "source": 101
+            }
         '''
         source_instance = Source.objects.get(id=source_id)
-        ratio = request.data.get('ratio') if request.data.get('ratio') != None else 1
-        new_value = source_instance.value * ratio
 
-        if request.data.get('acquisition_year') < source_instance.acquisition_year:
+        acquisition_year = request.data.get('acquisition_year')
+        source_acquisition_year = int(acquisition_year[:4]) 
+        if source_acquisition_year < source_instance.acquisition_year:
             return Response({"ERROR: the modification acquisition year cannot be lower than its source acquisition year"}, status=status.HTTP_400_BAD_REQUEST)
 
         data = {
             "source": source_id,
-            "ratio":  ratio,
+            "ratio":  request.data.get('ratio') if request.data.get('ratio') is not None else 1,
             "description": request.data.get('description'),
-            "value": new_value if request.data.get('ratio') != None else source_instance.value,
-            "emission_factor": request.data.get('emission_factor') if request.data.get('emission_factor') != None else source_instance.emission_factor,
-            "total_emission": request.data.get('total_emission') if request.data.get('total_emission') != None else source_instance.total_emission,
+            "emission_factor": request.data.get('emission_factor') if request.data.get('emission_factor') is not None else source_instance.emission_factor,
+            "total_emission": request.data.get('total_emission') if request.data.get('total_emission') is not None else 0,
             "lifetime": request.data.get('lifetime') if request.data.get('lifetime') != None else source_instance.lifetime,
-            "acquisition_year": request.data.get('acquisition_year') if request.data.get('acquisition_year') != None else source_instance.acquisition_year
+            "acquisition_year": request.data.get('acquisition_year')
         }
         
         serializer = ModificationSerializer(data=data)
