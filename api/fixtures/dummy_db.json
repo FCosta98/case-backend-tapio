@@ -51,6 +51,7 @@
         "fields": {
             "source": 101,
             "ratio": 0.75,
+            "emission_factor": 3.76,
             "description": "Modif café 1",
             "total_emission": 30,
             "lifetime": 1,
@@ -62,6 +63,7 @@
         "pk": 102,
         "fields": {
             "source": 101,
+            "emission_factor": 3.76,
             "ratio": 2,
             "description": "Modif café 2",
             "total_emission": 15,
