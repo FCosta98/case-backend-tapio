@@ -4,7 +4,7 @@ Dans ce rapport je vais détailler les différents choix fait pour la réalisati
 
 ## Commandes
 
-Voici la liste des diff ́erentes commandes :
+Voici la liste des différentes commandes :
 - **Ajouter une migration en DB :** python3 manage.py makemigrations 
 - **Exécuter les migrations :** python3 manage.py migrate
 - **Run le projet :** python3 manage.py runserver
