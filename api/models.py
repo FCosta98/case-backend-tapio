@@ -129,15 +129,8 @@ class Source(models.Model):
         """
             Returns the difference in emissions between a source's total emissions before and after its last modification for a specific year.
         """
-        if year == self.acquisition_year or modif_list is None or len(modif_list)==0 :
+        if year == self.acquisition_year or modif_list is None or len(modif_list)<=0 :
             return 0
-
-        """
-            new version
-            @pre  j'ai une modif_list ordonnée, 
-            1)    j'enlève tt les modif qui sont après la date, 
-            2)    je calcule direct le delta = amortissement dernière modifs + différence usage emission entre dernière et avant dernière modifs
-        """
 
         if year is None:
             last_modif = modif_list[len(modif_list)-1]
@@ -154,13 +147,13 @@ class Source(models.Model):
                 return delta
         else:
             modifs_with_year = [modif for modif in modif_list if modif.acquisition_year.year <= year]
-            if not modifs_with_year:
+            if len(modifs_with_year)<=0:
                 return 0
 
-            last_modif = modifs_with_year[len(modif_list)-1]
+            last_modif = modifs_with_year[len(modifs_with_year)-1]
             not_amortized = (year - last_modif.acquisition_year.year) < last_modif.lifetime
             if len(modifs_with_year)>1:
-                before_last_modif = modifs_with_year[len(modif_list)-2]
+                before_last_modif = modifs_with_year[len(modifs_with_year)-2]
                 usage_emission_delta = (last_modif.emission_factor * (last_modif.ratio * self.value)) - (before_last_modif.emission_factor * (before_last_modif.ratio * self.value))
                 amortissement_delta = last_modif.total_emission / last_modif.lifetime
                 delta = amortissement_delta + usage_emission_delta if not_amortized else usage_emission_delta
