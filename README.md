@@ -46,3 +46,5 @@ Tout d’abord j'ai ajouté une suite de tests qui permet de vérifier plus faci
 Ensuite comme mentionné ci-dessus j'ai modifié l'utilisation du modèle *Modification* qui permet de garder trace des valeurs initiales de la source, mais aussi qui facilite et optimise le calcul du delta.
 
 J'ai également suivi votre conseil, et désormais je charge la liste complètes des modifications concernées par un rapport, et ensuite je le filtre en fonction de la source. Cela permet de ne faire qu'un seul appel en base de données pour récupérer les modifications.
+
+Concernant les serializers, j'ai laissé l'entièreté des champs du dictionaire, ce n'est pas indispensable, mais cela me permet de vérifier facilement la valeur des différents champs lors du dévelopement et de mes tests.
